@@ -33,7 +33,6 @@ def generate_inputs(input_width, step):
   x_initial = round(0.607252935*max)
   print(x_initial, "x_initial")
   y_initial = 0
-  z_initial = 0
   
   pi_half_int = 2**input_width         #pi/2 represented as corresponding integer
   
@@ -52,5 +51,42 @@ def generate_inputs(input_width, step):
       artan[i+1] = int(m.ceil(artan[i+1]))
   print(artan,"artan values")
 
+  angle = np.arange(2**input_width)
+  angle = angle[::step]
+  return(x_initial, y_initial, angle, artan)
 
-  return()
+def find_errors_point (sin, cos, z, frac_width):
+  #err = np.arange (0, 2*np.pi, 2*np.pi/len(sin))
+  pi_half_int = 2**frac_width
+  max_err = 0
+  err_sin_point = np.zeros(len(sin))
+  err_cos_point = np.zeros(len(cos))
+  for i in range (len(sin)):
+    err_sin_point[i] = abs(np.sin(z[i]*np.pi/(2*pi_half_int))) - abs((sin[i])/(pi_half_int-1))
+    err_cos_point[i] = abs(np.cos(z[i]*np.pi/(2*pi_half_int))) - abs((cos[i])/(pi_half_int-1))
+
+    if (max_err < err_sin_point[i]):
+      max_err = err_sin_point[i]
+      a = i
+    elif(max_err < err_cos_point[i]):
+      max_err = err_cos_point[i]
+      a = i
+  #print(err_sin_point, err_cos_point, "err")
+  print(max_err,a, "MAX ERROR POINT")
+
+x, y, z, a = generate_inputs(6, 1**2**4)
+print(x,"initial")
+sin, cos = cordic (x, y, z, a) 
+find_errors_point (sin, cos, z, 6)
+fig, axs = plt.subplots(2, 1, figsize=(6, 6))
+
+# Plot on each subplot
+axs[0].plot(sin)
+axs[0].set_title('Sin(x)')
+
+axs[1].plot(cos)
+axs[1].set_title('Cos(x)')
+plt.tight_layout()  # Adjust layout for better spacing
+plt.show()
+
+
