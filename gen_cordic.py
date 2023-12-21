@@ -45,7 +45,7 @@ always @(posedge clk, negedge rst_n) begin
   return cordic
 
 
-input_width = 6
+input_width = 10
 pi_half_int = 2**input_width
 artan = np.zeros(input_width)
 artan[0] = m.atan(1)*pi_half_int/np.pi*2
@@ -56,6 +56,12 @@ for i in range (input_width-1):
 print(artan,"artan values")
 
 data_width = input_width
+
+x_const = 0.607252935
+
+x_in = round(x_const*(2**input_width-1))
+print(x_in, "x_in")
+y_in = 0
 
 def cordic_py (x_in, y_in, angle, artan):
   z_tgt = angle
@@ -74,8 +80,7 @@ def cordic_py (x_in, y_in, angle, artan):
   cos = z
   return(sin, cos)
 
-x_in = 38
-y_in = 0
+
 
 s, c = cordic_py(x_in,y_in,0,artan)
 
@@ -83,7 +88,7 @@ print(s,c,"sin i cos")
 s, c = cordic_py(x_in,y_in,10,artan)
 print(s,c,"sin i cos")
 artan = artan[::-1]
-atan = [1,2,3,4,5,6]
+atan = list(range(input_width))
 for i in range(len(artan)):
   atan[i] = (int(artan[i]))
 print(atan,"artan values")
