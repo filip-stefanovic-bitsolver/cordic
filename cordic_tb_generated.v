@@ -7,8 +7,8 @@ localparam time  C_CLK_PERIOD   = 2ns;
 localparam time C_RST_PERIOD    = 20ns;
 localparam D_WIDTH             = 16;
 localparam real PI             = 3.141592653589793;
-localparam real ERROR_TOL_R     = 1;
-localparam real ERROR_TOL_A     = 0.01;
+localparam real ERROR_TOL_R     = 50;
+localparam real ERROR_TOL_A     = 0.5;
 localparam integer MAX_Z_TGT   = 32768;
 
 localparam integer STEP_INT   = 1000;
@@ -62,7 +62,7 @@ always @(negedge clk or negedge rst_n) begin
     end
 end
 
-always @(posedge clk or negedge rst_n) begin
+always @(negedge clk or negedge rst_n) begin
     if (rst_n == 1'b0) begin
         error_x_a <= 0;
         error_y_a <= 0;
@@ -86,11 +86,11 @@ always @(posedge clk or negedge rst_n) begin
 end
 
 always @(*) begin
-    if (error_x_a > ERROR_TOL_A) begin
+    if (error_x_a > ERROR_TOL_A || -error_x_a > ERROR_TOL_A) begin
         $display("Apsolutna greska x kordinate je veca od %0f%% i iznosi %0f%% za vrednost ugla %0d.", ERROR_TOL_A*100, error_x_a*100,z_tgt_int);
          $finish;
     end
-    if (error_y_a > ERROR_TOL_A) begin
+    if (error_y_a > ERROR_TOL_A || -error_y_a > ERROR_TOL_A) begin
         $display("Apsolutna greska y kordinate je veca od %0f%% i iznosi %0f%% za vrednost ugla %0d.", ERROR_TOL_A*100, error_y_a*100,z_tgt_int);
          $finish;
     end

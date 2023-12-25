@@ -44,10 +44,10 @@ always @(posedge clk, negedge rst_n) begin
     cordic += f"    y[{i+1}] <= (!z[{i}][{data_width}]) ? y[{i}] + (x[{i}]>>>{i}) : y[{i}] - (x[{i}]>>>{i});\n"
     cordic += f"    z[{i+1}] <= (!z[{i}][{data_width}]) ? z[{i}] - atan[{(i+1)*(data_width+1)-1}:{i*(data_width+1)}] : z[{i}] + atan[{(i+1)*(data_width+1)-1}:{i*(data_width+1)}];\n"
   cordic+= f" end\nend\n"
-  cordic+= f"assign x_out = (x[{d_w+1}][{data_width}] != 1'b1) ? x[{d_w+1}] : {data_width+1}'d{2**data_width-1};\n"
-  cordic+= f"assign y_out = (y[{d_w+1}][{data_width}] != 1'b1) ? y[{d_w+1}] : {data_width+1}'d{2**data_width-1};\n"
-  #cordic+= f"assign x_out = x[{d_w+1}];\n"
-  #cordic+= f"assign y_out = y[{d_w+1}];\n"
+  #cordic+= f"assign x_out = (x[{d_w+1}][{data_width}] != 1'b1) ? x[{d_w+1}] : {data_width+1}'d{2**data_width-1};\n"
+  #cordic+= f"assign y_out = (y[{d_w+1}][{data_width}] != 1'b1) ? y[{d_w+1}] : {data_width+1}'d{2**data_width-1};\n"
+  cordic+= f"assign x_out = x[{d_w+1}];\n"
+  cordic+= f"assign y_out = y[{d_w+1}];\n"
   cordic += "endmodule"
   return cordic
 
@@ -167,7 +167,7 @@ def generate_cordic_tb(input_width,error_tol,step):
         file.write("end\n\n")
 
         # Always block for z_tgt_int increment
-        file.write("always @(posedge clk or negedge rst_n) begin\n")
+        file.write("always @(negedge clk or negedge rst_n) begin\n")
         file.write("    if (rst_n == 1'b0) begin\n")
         file.write("        error_x_a <= 0;\n")
         file.write("        error_y_a <= 0;\n")
@@ -193,11 +193,11 @@ def generate_cordic_tb(input_width,error_tol,step):
 
         # Always block for error display
         file.write("always @(*) begin\n")
-        file.write(f"    if (error_x_a > ERROR_TOL_A) begin\n")
+        file.write(f"    if (error_x_a > ERROR_TOL_A || -error_x_a > ERROR_TOL_A) begin\n")
         file.write(f"        $display(\"Apsolutna greska x kordinate je veca od %0f%% i iznosi %0f%% za vrednost ugla %0d.\", ERROR_TOL_A*100, error_x_a*100,z_tgt_int);\n")
         file.write("         $finish;\n")
         file.write("    end\n")
-        file.write(f"    if (error_y_a > ERROR_TOL_A) begin\n")
+        file.write(f"    if (error_y_a > ERROR_TOL_A || -error_y_a > ERROR_TOL_A) begin\n")
         file.write(f"        $display(\"Apsolutna greska y kordinate je veca od %0f%% i iznosi %0f%% za vrednost ugla %0d.\", ERROR_TOL_A*100, error_y_a*100,z_tgt_int);\n")
         file.write("         $finish;\n")
         file.write("    end\n")

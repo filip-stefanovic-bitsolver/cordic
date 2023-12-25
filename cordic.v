@@ -67,6 +67,6 @@ always @(posedge clk, negedge rst_n) begin
     z[15] <= (!z[14][15]) ? z[14] - atan[239:224] : z[14] + atan[239:224];
  end
 end
-assign x_out = (x[15][15] != 1'b1) ? x[15] : 16'd32767;
-assign y_out = (y[15][15] != 1'b1) ? y[15] : 16'd32767;
+assign x_out = x[15];
+assign y_out = y[15];
 endmodule
