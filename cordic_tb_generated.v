@@ -7,8 +7,8 @@ localparam time  C_CLK_PERIOD   = 2ns;
 localparam time C_RST_PERIOD    = 20ns;
 localparam D_WIDTH             = 16;
 localparam real PI             = 3.141592653589793;
-localparam real ERROR_TOL_R     = 50;
-localparam real ERROR_TOL_A     = 0.5;
+localparam real ERROR_TOL_R     = 1;
+localparam real ERROR_TOL_A     = 0.01;
 localparam integer MAX_Z_TGT   = 32768;
 
 localparam integer STEP_INT   = 1000;
