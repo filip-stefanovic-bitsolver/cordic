@@ -7,8 +7,8 @@ localparam time  C_CLK_PERIOD   = 2ns;
 localparam time C_RST_PERIOD    = 20ns;
 localparam D_WIDTH             = 16;
 localparam real PI             = 3.141592653589793;
-localparam real ERROR_TOL_R     = 5;
-localparam real ERROR_TOL_A     = 0.05;
+localparam real ERROR_TOL_R     = 1;
+localparam real ERROR_TOL_A     = 0.01;
 localparam integer MAX_Z_TGT   = 32768;
 
 localparam integer STEP_INT   = 1000;
@@ -62,7 +62,7 @@ always @(negedge clk or negedge rst_n) begin
     end
 end
 
-always @(negedge clk or negedge rst_n) begin
+always @(posedge clk or negedge rst_n) begin
     if (rst_n == 1'b0) begin
         error_x_a <= 0;
         error_y_a <= 0;
@@ -103,7 +103,7 @@ always @(*) begin
         xv_out_int = $cos(($itor(z_tgt_int_delay) * PI) / (2 ** (D_WIDTH)));
         yv_out_int = $sin(($itor(z_tgt_int_delay) * PI) / (2 ** (D_WIDTH)));
     end
-   if (z_tgt_int >= (MAX_Z_TGT - STEP_INT))
+   if (z_tgt_int_delay >= (MAX_Z_TGT - STEP_INT))
          $finish;
 end
 

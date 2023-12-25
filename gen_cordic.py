@@ -167,7 +167,7 @@ def generate_cordic_tb(input_width,error_tol,step):
         file.write("end\n\n")
 
         # Always block for z_tgt_int increment
-        file.write("always @(negedge clk or negedge rst_n) begin\n")
+        file.write("always @(posedge clk or negedge rst_n) begin\n")
         file.write("    if (rst_n == 1'b0) begin\n")
         file.write("        error_x_a <= 0;\n")
         file.write("        error_y_a <= 0;\n")
@@ -211,7 +211,7 @@ def generate_cordic_tb(input_width,error_tol,step):
         file.write(f"        xv_out_int = $cos(($itor(z_tgt_int_delay) * PI) / (2 ** (D_WIDTH)));\n")
         file.write(f"        yv_out_int = $sin(($itor(z_tgt_int_delay) * PI) / (2 ** (D_WIDTH)));\n")
         file.write("    end\n")
-        file.write(f"   if (z_tgt_int >= (MAX_Z_TGT - STEP_INT))\n")
+        file.write(f"   if (z_tgt_int_delay >= (MAX_Z_TGT - STEP_INT))\n")
         file.write("         $finish;\n")
         file.write("end\n\n")
 
