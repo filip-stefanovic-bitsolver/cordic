@@ -3,6 +3,27 @@ import math as m
 import sys
 import subprocess
 import time
+import argparse
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser(description='Generate CORDIC testbench with specified parameters.')
+
+  parser.add_argument('input_width', type=int, help='Input width')
+  parser.add_argument('error_tol', type=int, help='Error tolerance')
+  parser.add_argument('step', type=int, help='Step size')
+  parser.add_argument('wave_req', type=int, help='Waveform request')
+
+  args = parser.parse_args()
+
+  input_width = args.input_width
+  error_tol = args.error_tol
+  step = args.step
+  wave_req = args.wave_req
+
+  print(f"Selected input_width: {input_width}")
+  print(f"Selected error tolerance: {error_tol}")
+  print(f"Selected step: {step}")
+  print(f"Selected waveform request: {wave_req}")
 
 #function for generating cordic (arguments: table of arc tan, signal width in bits, initial value of x coordinate)
 def generate_cordic(atan, data_width, x_init):
@@ -51,19 +72,11 @@ always @(posedge clk, negedge rst_n) begin
   cordic += "endmodule"
   return cordic
 
-if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Usage: python generate_cordic_tb.py <input_data>")
-        sys.exit(1)
 
-    input_width = int(sys.argv[1])
-    error_tol = int(sys.argv[2])
-    step = int(sys.argv[3])
-    wave_req = int(sys.argv[4])
 
-    print(f"Selected input_width: {input_width}")
-    print(f"Selected error tolerance : {error_tol}")
-    print(f"Selected step : {step}")
+
+
+
 pi_half_int = 2**input_width
 artan = np.zeros(input_width)
 artan[0] = m.atan(1)*pi_half_int/np.pi*2
